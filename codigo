@@ -1,0 +1,35 @@
+function [A,b,x]= gauss_pivotacion(A,b) 
+n = length(b); 
+o=length(A); 
+x = zeros(n,1);  
+if o!=n
+  msgID = 'GAUSS:condicion';
+  msg = 'Error: No tiene la misma dimension ';
+  
+  error(msgID,msg)
+else 
+  for j= 1:n-1;
+   %selecionamos la fila con mayor pivote
+   al=abs(A(j,j));m=j;
+   for k=j+1:n;
+     if abs(A(k,j))> al
+      al=abs(A(k,j));m=k;
+     endif
+   endfor
+   
+   % Ordenamos las filas 
+   be=A(j,j:n);
+   A(j,j:n)=A(m,j:n);
+   A(m,j:n)=be;
+   be=b(j);b(j)=b(m);b(m)=be;
+   
+   % fase de eliminación 
+   for i = j+1:n 
+         al = -A(i,j)/A(j,j);  
+         A(i,j:n) = A(i,j:n) + al*A(j,j:n);  
+         b(i)= b(i) + al*b(j);  
+    end  
+end  
+for i = n:-1:1 %sustitución hacia atrás  
+  x(i) = (b(i) - A(i,i+1:n)*x(i+1:n))/A(i,i);  
+end
